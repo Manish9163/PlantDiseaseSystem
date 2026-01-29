@@ -2,6 +2,20 @@
 # Python .gitignore
 # ================================================================
 
+# Large datasets (don't commit to git - too large for deployment)
+plantvillage_dataset/
+
+# Uploaded test images
+static/uploads/*.jpg
+static/uploads/*.jpeg
+static/uploads/*.png
+static/uploads/*.webp
+static/uploads/*.JPG
+
+# Training outputs
+training_history.png
+confusion_matrix.png
+
 # Virtual Environments
 .venv/
 .venv-1/
