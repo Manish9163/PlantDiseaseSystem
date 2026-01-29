@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Recognition System</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header/Navigation -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>🌿 PlantGuard</h1>
+                    <p class="tagline">AI-Powered Plant Disease Detection</p>
+                </div>
+                <div class="header-buttons">
+                    <a href="/about" class="nav-button">ℹ️ About</a>
+                    <button class="dark-mode-toggle" id="dark-mode-btn" onclick="toggleDarkMode()">🌙</button>
+                </div>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h2>Detect Plant Diseases in Seconds</h2>
+                    <p>Upload a photo of your plant leaf and get instant diagnosis with treatment recommendations</p>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="upload-section">
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">📁</div>
+                        <h3>Upload Plant Image</h3>
+                        <p>Drag and drop or click to select</p>
+                        <p class="upload-hint">PNG, JPG, JPEG (Max 16MB)</p>
+                        <input type="file" id="file-input" class="file-input" accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your plant...</p>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="results-section">
+                <!-- Disease Detection Card -->
+                <div class="detection-card">
+                    <div class="detection-header">
+                        <h2>🔍 Disease Detected</h2>
+                    </div>
+                    <div class="detection-content">
+                        <img id="uploaded-image" src="" alt="Uploaded Image" style="max-width:100%;display:none;border-radius:10px;margin:0 auto 20px;text-align:center;" />
+                        <div class="disease-name" id="disease-name">-</div>
+                    </div>
+                </div>
+
+                <!-- Disease Information Grid -->
+                <div class="info-grid">
+                    <!-- Symptoms Card -->
+                    <div class="info-card symptoms-card">
+                        <div class="card-icon">🔍</div>
+                        <h3>Symptoms</h3>
+                        <p id="symptoms">-</p>
+                    </div>
+
+                    <!-- Causes Card -->
+                    <div class="info-card causes-card">
+                        <div class="card-icon">🔬</div>
+                        <h3>Causes</h3>
+                        <p id="causes">-</p>
+                    </div>
+
+                    <!-- Prevention Card -->
+                    <div class="info-card prevention-card">
+                        <div class="card-icon">🛡️</div>
+                        <h3>Prevention</h3>
+                        <p id="prevention">-</p>
+                    </div>
+                </div>
+
+                <!-- Treatment Solutions Card -->
+                <div class="treatment-card">
+                    <div class="treatment-header">
+                        <h2>💊 Treatment Solutions</h2>
+                    </div>
+                    <ul class="solution-list" id="solutions"></ul>
+                </div>
+
+                <!-- Feedback Section -->
+                <div class="feedback-section">
+                    <div class="feedback-header">
+                        <h3>📝 Was this diagnosis helpful?</h3>
+                        <p>Your feedback helps improve our AI model</p>
+                    </div>
+                    <div class="feedback-buttons">
+                        <button class="feedback-btn helpful-btn" onclick="submitFeedback(true, this)">
+                            👍 Helpful
+                        </button>
+                        <button class="feedback-btn not-helpful-btn" onclick="submitFeedback(false, this)">
+                            👎 Not Helpful
+                        </button>
+                    </div>
+                    <div id="feedback-message" class="feedback-message"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                        📸 Scan Another Plant
+                    </button>
+                    <button class="btn btn-secondary" onclick="location.reload()">
+                        🔄 Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info Banner -->
+            <div class="info-banner">
+                <h3>💁 Tips for Best Results</h3>
+                <ul>
+                    <li>Take clear photos in good lighting</li>
+                    <li>Focus on affected areas of the leaf</li>
+                    <li>Ensure the leaf fills most of the frame</li>
+                    <li>Use natural daylight when possible</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2025 PlantGuard - Plant Disease Recognition System</p>
+            <p>Powered by AI & Deep Learning</p>
+        </div>
+    </div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
