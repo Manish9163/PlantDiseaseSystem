@@ -43,6 +43,18 @@ class_names = [
 def load_model():
     global model
     try:
+        print(f"Current directory: {os.getcwd()}")
+        print(f"Script directory: {os.path.dirname(__file__)}")
+        print(f"Looking for model at: {MODEL_PATH}")
+        print(f"Model file exists: {os.path.exists(MODEL_PATH)}")
+        
+        # List files in models directory
+        models_dir = os.path.join(os.path.dirname(__file__), 'models')
+        if os.path.exists(models_dir):
+            print(f"Files in models directory: {os.listdir(models_dir)}")
+        else:
+            print(f"Models directory does not exist at: {models_dir}")
+        
         if os.path.exists(MODEL_PATH):
             print(f"Loading model from: {MODEL_PATH}")
             model = tf.keras.models.load_model(MODEL_PATH)
@@ -50,9 +62,18 @@ def load_model():
             return True
         else:
             print(f"Model file not found at: {MODEL_PATH}")
+            # Try alternative path
+            alt_path = 'models/detector_disease.keras'
+            if os.path.exists(alt_path):
+                print(f"Found model at alternative path: {alt_path}")
+                model = tf.keras.models.load_model(alt_path)
+                print(f"Model loaded from alternative path!")
+                return True
             return False
     except Exception as e:
         print(f"Error loading model: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def allowed_file(filename):
@@ -95,8 +116,19 @@ def favicon():
 
 @app.route('/health')
 def health_check():
-    """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'model_loaded': model is not None})
+    """Health check endpoint for deployment platforms"""
+    if model is not None:
+        return jsonify({
+            'status': 'healthy',
+            'model_loaded': True,
+            'classes': len(class_names)
+        }), 200
+    else:
+        return jsonify({
+            'status': 'unhealthy',
+            'model_loaded': False,
+            'error': 'Model not loaded'
+        }), 503
 
 @app.route('/model_info')
 def model_info():
@@ -156,12 +188,16 @@ def predict():
         print(f"File saved to: {filepath}")
         
         # Preprocess image
+        print("Preprocessing image...")
         img = preprocess_image(filepath)
         if img is None:
+            print("ERROR: Image preprocessing failed")
             return jsonify({
                 'success': False,
                 'error': 'Could not read image. Please upload a valid image file.'
             }), 400
+        
+        print(f"Image preprocessed successfully. Shape: {img.shape}")
         
         # Make prediction
         print("Making prediction...")
