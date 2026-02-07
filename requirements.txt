@@ -5,3 +5,4 @@ numpy
 Werkzeug==3.0.1
 gunicorn==21.2.0
 Pillow
+matplotlib
