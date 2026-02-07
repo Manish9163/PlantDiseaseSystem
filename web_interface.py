@@ -8,6 +8,20 @@ from werkzeug.utils import secure_filename
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from plant_disease_detector import disease_solutions
 
+# Optimize TensorFlow memory usage
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+tf.config.set_soft_device_placement(True)
+
+# Set memory growth to prevent OOM errors
+try:
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+except:
+    pass
+
 app = Flask(__name__, template_folder='templates')
 
 # Configuration
@@ -199,9 +213,11 @@ def predict():
         
         print(f"Image preprocessed successfully. Shape: {img.shape}")
         
-        # Make prediction
+        # Make prediction with optimized settings
         print("Making prediction...")
-        predictions = model.predict(img, verbose=0)
+        # Use smaller batch size and disable eager execution for memory efficiency
+        with tf.device('/CPU:0'):  # Force CPU to avoid GPU memory issues
+            predictions = model.predict(img, verbose=0, batch_size=1)
         print(f"Predictions shape: {predictions.shape}")
         
         # Validate predictions
